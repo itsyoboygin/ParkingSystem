@@ -4,8 +4,9 @@ import oracledb
 
 def dict_factory(cursor):
     """Convert query results to dictionaries"""
-    columns = [col[0].lower() for col in cursor.description]
     def create_row(*args):
+        # Access cursor.description here, after query execution
+        columns = [col[0].lower() for col in cursor.description]
         return dict(zip(columns, args))
     return create_row
 
