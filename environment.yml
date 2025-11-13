@@ -1,0 +1,15 @@
+name: parking-system
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - nodejs=20
+  - pip
+  - pip:
+    - fastapi==0.104.1
+    - uvicorn==0.24.0
+    - oracledb==2.0.1
+    - pydantic==2.5.0
+    - python-dotenv==1.0.0
+    - python-multipart==0.0.6
