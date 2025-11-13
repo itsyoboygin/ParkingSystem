@@ -26,8 +26,8 @@ const SubscriptionsPage = () => {
         getSubscriptions(100, 0),
         getExpiringSubscriptions(7)
       ]);
-      setSubscriptions(subsRes.data.data);
-      setExpiring(expiringRes.data.data);
+      setSubscriptions(subsRes.data?.data || []);
+      setExpiring(expiringRes.data?.data || []);
     } catch (error) {
       console.error('Error fetching subscriptions:', error);
     } finally {
@@ -147,11 +147,13 @@ const SubscriptionsPage = () => {
               </h3>
               <p className="text-orange-700 mb-3">These subscriptions will expire within 7 days. Contact residents to renew.</p>
               <div className="space-y-2">
-                {expiring.slice(0, 3).map((sub) => (
-                  <div key={sub.subscription_id} className="flex justify-between items-center p-3 bg-white rounded-lg">
+                {expiring.slice(0, 3).map((sub, idx) => (
+                  <div key={`expiring-${sub.subscription_id}-${idx}`} className="flex justify-between items-center p-3 bg-white rounded-lg">
                     <div>
-                      <p className="font-medium text-gray-900">{sub.resident_name}</p>
-                      <p className="text-sm text-gray-600">{sub.license_plate} • Expires: {new Date(sub.expiration_date).toLocaleDateString()}</p>
+                      <p className="font-medium text-gray-900">{sub.resident_name || 'N/A'}</p>
+                      <p className="text-sm text-gray-600">
+                        {sub.license_plate || 'N/A'} • Expires: {sub.expiration_date ? new Date(sub.expiration_date).toLocaleDateString() : 'N/A'}
+                      </p>
                     </div>
                     <button
                       onClick={() => handleRenew(sub.subscription_id)}
@@ -186,27 +188,29 @@ const SubscriptionsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {subscriptions.slice(0, 20).map((sub) => {
-                const isExpiring = new Date(sub.expiration_date) - new Date() < 7 * 24 * 60 * 60 * 1000;
-                const isExpired = new Date(sub.expiration_date) < new Date();
+              {subscriptions.slice(0, 20).map((sub, idx) => {
+                const isExpiring = sub.expiration_date && (new Date(sub.expiration_date) - new Date() < 7 * 24 * 60 * 60 * 1000);
+                const isExpired = sub.expiration_date && (new Date(sub.expiration_date) < new Date());
                 
                 return (
-                  <tr key={sub.subscription_id} className={`hover:bg-gray-50 ${isExpired ? 'bg-red-50' : isExpiring ? 'bg-yellow-50' : ''}`}>
+                  <tr key={`all-sub-${sub.subscription_id}-${idx}`} className={`hover:bg-gray-50 ${isExpired ? 'bg-red-50' : isExpiring ? 'bg-yellow-50' : ''}`}>
                     <td className="table-cell">{sub.subscription_id}</td>
-                    <td className="table-cell font-medium">{sub.resident_name}</td>
-                    <td className="table-cell font-mono">{sub.license_plate}</td>
+                    <td className="table-cell font-medium">{sub.resident_name || 'N/A'}</td>
+                    <td className="table-cell font-mono">{sub.license_plate || 'N/A'}</td>
                     <td className="table-cell">
                       <span className="px-2 py-1 bg-accent/20 text-accent rounded-full text-sm">
-                        {sub.is_monthly ? 'Monthly' : sub.is_quaterly ? 'Quarterly' : 'Yearly'}
+                        {sub.is_monthly ? 'Monthly' : sub.is_quaterly ? 'Quarterly' : sub.is_yearly ? 'Yearly' : 'N/A'}
                       </span>
                     </td>
-                    <td className="table-cell">{new Date(sub.start_date).toLocaleDateString()}</td>
+                    <td className="table-cell">
+                      {sub.start_date ? new Date(sub.start_date).toLocaleDateString() : 'N/A'}
+                    </td>
                     <td className="table-cell">
                       <span className={isExpired ? 'text-red-600 font-semibold' : isExpiring ? 'text-orange-600 font-semibold' : ''}>
-                        {new Date(sub.expiration_date).toLocaleDateString()}
+                        {sub.expiration_date ? new Date(sub.expiration_date).toLocaleDateString() : 'N/A'}
                       </span>
                     </td>
-                    <td className="table-cell">{sub.cost?.toLocaleString()} VND</td>
+                    <td className="table-cell">{sub.cost?.toLocaleString() || 'N/A'} VND</td>
                     <td className="table-cell">
                       <button
                         onClick={() => handleRenew(sub.subscription_id)}

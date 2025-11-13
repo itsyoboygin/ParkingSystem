@@ -34,8 +34,24 @@ const ResidentsPage = () => {
         getResidents(100, 0),
         getVehicles(100, 0)
       ]);
-      setResidents(residentsRes.data.data);
-      setVehicles(vehiclesRes.data.data);
+      
+      console.log('=== RESIDENTS DEBUG ===');
+      console.log('Full response:', residentsRes);
+      console.log('residentsRes.data:', residentsRes.data);
+      console.log('residentsRes.data.data:', residentsRes.data?.data);
+      console.log('residentsRes.data.count:', residentsRes.data?.count);
+      
+      // Response structure: {data: {data: [...], count: N}}
+      const residentsArray = residentsRes.data?.data || [];
+      const vehiclesArray = vehiclesRes.data?.data || [];
+      
+      console.log('Final residents array:', residentsArray);
+      console.log('Final vehicles array:', vehiclesArray);
+      console.log('Residents length:', residentsArray.length);
+      console.log('Vehicles length:', vehiclesArray.length);
+      
+      setResidents(residentsArray);
+      setVehicles(vehiclesArray);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -239,8 +255,8 @@ const ResidentsPage = () => {
               >
                 <option value="Car">Car</option>
                 <option value="Motorcycle">Motorcycle</option>
-                <option value="Bicycle">Bicycle</option>
-                <option value="Truck">Truck</option>
+                <option value="EV_Car">EV Car</option>
+                <option value="EV_Motorcycle">EV Motorcycle</option>
               </select>
             </div>
             <div className="md:col-span-3 flex justify-end space-x-3">
@@ -273,7 +289,7 @@ const ResidentsPage = () => {
             </thead>
             <tbody className="bg-white">
               {filteredResidents.slice(0, 20).map((resident) => (
-                <tr key={resident.resident_id} className="hover:bg-gray-50">
+                <tr key={`resident-${resident.resident_id}`} className="hover:bg-gray-50">
                   <td className="table-cell">{resident.resident_id}</td>
                   <td className="table-cell font-medium">{resident.name}</td>
                   <td className="table-cell">{resident.building_id}</td>
@@ -311,7 +327,7 @@ const ResidentsPage = () => {
             </thead>
             <tbody className="bg-white">
               {filteredVehicles.slice(0, 20).map((vehicle) => (
-                <tr key={vehicle.vehicle_id} className="hover:bg-gray-50">
+                <tr key={`vehicle-${vehicle.vehicle_id}`} className="hover:bg-gray-50">
                   <td className="table-cell">{vehicle.vehicle_id}</td>
                   <td className="table-cell font-mono font-bold">{vehicle.license_plate}</td>
                   <td className="table-cell">

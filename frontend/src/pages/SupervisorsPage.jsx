@@ -20,9 +20,15 @@ const SupervisorsPage = () => {
         getAllShifts(),
         getAllSupervisorReports()
       ]);
-      setSupervisors(supervisorsRes.data.data);
-      setShifts(shiftsRes.data.data);
-      setReports(reportsRes.data.data);
+      
+      // API returns {data: {data: [...], count: N}}
+      const supervisorsData = supervisorsRes.data?.data || [];
+      const shiftsData = shiftsRes.data?.data || [];
+      const reportsData = reportsRes.data?.data || [];
+      
+      setSupervisors(supervisorsData);
+      setShifts(shiftsData);
+      setReports(reportsData);
     } catch (error) {
       console.error('Error fetching supervisor data:', error);
     } finally {
@@ -58,7 +64,7 @@ const SupervisorsPage = () => {
             <div>
               <p className="text-gray-600 text-sm font-medium mb-1">Active Shifts Today</p>
               <p className="text-3xl font-bold text-accent">
-                {shifts.filter(s => !s.check_out_time && new Date(s.check_in_time).toDateString() === new Date().toDateString()).length}
+                {shifts.filter(s => !s.check_out_time && s.check_in_time && new Date(s.check_in_time).toDateString() === new Date().toDateString()).length}
               </p>
             </div>
             <div className="p-4 rounded-full bg-blue-100">
@@ -96,12 +102,12 @@ const SupervisorsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {supervisors.map((supervisor) => (
-                <tr key={supervisor.supervisor_id} className="hover:bg-gray-50">
+              {supervisors.map((supervisor, idx) => (
+                <tr key={`supervisor-${supervisor.supervisor_id || 'unknown'}-${idx}`} className="hover:bg-gray-50">
                   <td className="table-cell">{supervisor.supervisor_id}</td>
-                  <td className="table-cell font-medium">{supervisor.name}</td>
-                  <td className="table-cell">{supervisor.phone_number}</td>
-                  <td className="table-cell">{supervisor.email}</td>
+                  <td className="table-cell font-medium">{supervisor.name || 'N/A'}</td>
+                  <td className="table-cell">{supervisor.phone_number || 'N/A'}</td>
+                  <td className="table-cell">{supervisor.email || 'N/A'}</td>
                 </tr>
               ))}
             </tbody>
@@ -125,12 +131,12 @@ const SupervisorsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {reports.map((report) => (
-                  <tr key={report.supervisor_report_id} className="hover:bg-gray-50">
-                    <td className="table-cell font-medium">{report.supervisor_name}</td>
+                {reports.map((report, idx) => (
+                  <tr key={`report-${report.supervisor_report_id || 'unknown'}-${idx}`} className="hover:bg-gray-50">
+                    <td className="table-cell font-medium">{report.supervisor_name || 'N/A'}</td>
                     <td className="table-cell">
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                        {report.total_shifts_made} shifts
+                        {report.total_shifts_made || 0} shifts
                       </span>
                     </td>
                     <td className="table-cell font-semibold text-green-600">
@@ -139,7 +145,9 @@ const SupervisorsPage = () => {
                     <td className="table-cell">
                       {(report.salary || 0).toLocaleString()} VND
                     </td>
-                    <td className="table-cell">{new Date(report.month).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</td>
+                    <td className="table-cell">
+                      {report.month ? new Date(report.month).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'N/A'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -164,12 +172,14 @@ const SupervisorsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {shifts.slice(0, 20).map((shift) => (
-                <tr key={shift.shift_id} className="hover:bg-gray-50">
+              {shifts.slice(0, 20).map((shift, idx) => (
+                <tr key={`shift-${shift.shift_id || 'unknown'}-${idx}`} className="hover:bg-gray-50">
                   <td className="table-cell">{shift.shift_id}</td>
-                  <td className="table-cell font-medium">{shift.supervisor_name}</td>
-                  <td className="table-cell">{shift.day?.trim()}</td>
-                  <td className="table-cell">{new Date(shift.check_in_time).toLocaleString()}</td>
+                  <td className="table-cell font-medium">{shift.supervisor_name || 'N/A'}</td>
+                  <td className="table-cell">{shift.day?.trim() || 'N/A'}</td>
+                  <td className="table-cell">
+                    {shift.check_in_time ? new Date(shift.check_in_time).toLocaleString() : 'N/A'}
+                  </td>
                   <td className="table-cell">
                     {shift.check_out_time ? 
                       new Date(shift.check_out_time).toLocaleString() : 

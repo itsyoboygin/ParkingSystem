@@ -31,9 +31,9 @@ const VisitorsPage = () => {
         getActiveVisitors(),
         getVisitorStats()
       ]);
-      setVisitors(visitorsRes.data.data);
-      setActiveVisitors(activeRes.data.data);
-      setStats(statsRes.data);
+      setVisitors(visitorsRes.data?.data || []);
+      setActiveVisitors(activeRes.data?.data || []);
+      setStats(statsRes.data || {});
     } catch (error) {
       console.error('Error fetching visitor data:', error);
     } finally {
@@ -220,14 +220,16 @@ const VisitorsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {activeVisitors.map((visitor) => {
+                {activeVisitors.map((visitor, idx) => {
                   const duration = Math.floor((new Date() - new Date(visitor.arrival_time)) / 1000 / 60);
                   return (
-                    <tr key={visitor.record_id} className="hover:bg-gray-50">
+                    <tr key={`active-visitor-${visitor.record_id}-${idx}-${visitor.arrival_time}`} className="hover:bg-gray-50">
                       <td className="table-cell">{visitor.record_id}</td>
-                      <td className="table-cell font-mono font-bold">{visitor.license_plate}</td>
+                      <td className="table-cell font-mono font-bold">{visitor.license_plate || 'N/A'}</td>
                       <td className="table-cell">{visitor.space_id}</td>
-                      <td className="table-cell">{new Date(visitor.arrival_time).toLocaleString()}</td>
+                      <td className="table-cell">
+                        {visitor.arrival_time ? new Date(visitor.arrival_time).toLocaleString() : 'N/A'}
+                      </td>
                       <td className="table-cell">
                         <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                           {duration} mins
@@ -257,11 +259,13 @@ const VisitorsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {visitors.slice(0, 20).map((visitor) => (
-                <tr key={visitor.record_id} className="hover:bg-gray-50">
+              {visitors.slice(0, 20).map((visitor, idx) => (
+                <tr key={`visitor-history-${visitor.record_id}-${idx}-${visitor.arrival_time}`} className="hover:bg-gray-50">
                   <td className="table-cell">{visitor.record_id}</td>
-                  <td className="table-cell font-mono">{visitor.license_plate}</td>
-                  <td className="table-cell">{new Date(visitor.arrival_time).toLocaleString()}</td>
+                  <td className="table-cell font-mono">{visitor.license_plate || 'N/A'}</td>
+                  <td className="table-cell">
+                    {visitor.arrival_time ? new Date(visitor.arrival_time).toLocaleString() : 'N/A'}
+                  </td>
                   <td className="table-cell">
                     {visitor.departure_time ? new Date(visitor.departure_time).toLocaleString() : 
                       <span className="text-green-600 font-semibold">Still parked</span>

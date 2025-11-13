@@ -2,24 +2,23 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime, date
 import oracledb
 
-def dict_factory(cursor):
-    """Convert query results to dictionaries"""
-    def create_row(*args):
-        # Access cursor.description here, after query execution
-        columns = [col[0].lower() for col in cursor.description]
-        return dict(zip(columns, args))
-    return create_row
-
 def execute_query(connection, query: str, params: dict = None) -> List[Dict[str, Any]]:
     """Execute a SELECT query and return results as list of dicts"""
     cursor = connection.cursor()
-    cursor.rowfactory = dict_factory(cursor)
     try:
         if params:
             cursor.execute(query, params)
         else:
             cursor.execute(query)
-        return cursor.fetchall()
+        
+        # Get column names
+        columns = [col[0].lower() for col in cursor.description]
+        
+        # Fetch all rows and convert to dicts
+        rows = cursor.fetchall()
+        result = [dict(zip(columns, row)) for row in rows]
+        
+        return result
     finally:
         cursor.close()
 
