@@ -129,7 +129,7 @@ const ResidentsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="page-header mb-6">
+      <div className="page-header mb-6 flex justify-between items-start">
         <h1>Residents & Vehicles</h1>
         <p>Manage resident information and vehicle registrations</p>
       </div>
@@ -208,7 +208,7 @@ const ResidentsPage = () => {
               />
             </div>
             <div className="md:col-span-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowResidentForm(false)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button type="button" onClick={() => setShowResidentForm(false)} className="btn-primary">
                 Cancel
               </button>
               <button type="submit" className="btn-primary">
@@ -261,7 +261,7 @@ const ResidentsPage = () => {
               </select>
             </div>
             <div className="md:col-span-3 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowVehicleForm(false)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button type="button" onClick={() => setShowVehicleForm(false)} className="btn-secondary">
                 Cancel
               </button>
               <button type="submit" className="btn-secondary">
