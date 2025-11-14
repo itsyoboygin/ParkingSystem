@@ -24,6 +24,7 @@ const VisitorsPage = () => {
     fetchData();
   }, []);
 
+
   const fetchData = async () => {
     try {
       const [visitorsRes, activeRes, statsRes] = await Promise.all([
@@ -48,10 +49,10 @@ const VisitorsPage = () => {
       setShowEntryForm(false);
       setEntryForm({ license_plate: '', space_id: '' });
       fetchData();
-      alert('Visitor entry recorded successfully!');
+      console.log('[notification] success: Visitor entry recorded successfully');
     } catch (error) {
       console.error('Error recording entry:', error);
-      alert('Failed to record entry');
+      console.error('[notification] error:', error?.message || 'Failed to record entry');
     }
   };
 
@@ -62,10 +63,10 @@ const VisitorsPage = () => {
       setShowExitForm(false);
       setExitForm({ license_plate: '' });
       fetchData();
-      alert(`Visitor exit recorded! Parking fee: ${response.data.parking_fee.toLocaleString()} VND`);
+      console.log('[notification] success: Exit recorded - Parking fee:', response.data.parking_fee);
     } catch (error) {
       console.error('Error recording exit:', error);
-      alert('Failed to record exit');
+      console.error('[notification] error:', error?.message || 'Failed to record exit');
     }
   };
 
@@ -73,10 +74,10 @@ const VisitorsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="page-header mb-6 flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-primary mb-2">Visitor Parking</h1>
-          <p className="text-gray-600">Manage visitor entries, exits, and fee calculation</p>
+          <h1>Visitor Parking</h1>
+          <p>Manage visitor entries, exits, and fee calculation</p>
         </div>
         <div className="flex space-x-3">
           <button onClick={() => setShowEntryForm(!showEntryForm)} className="btn-primary flex items-center">
@@ -91,40 +92,34 @@ const VisitorsPage = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Total Visitors Today</p>
-              <p className="text-3xl font-bold text-primary">{stats?.total_visitors_today || 0}</p>
-            </div>
-            <div className="p-4 rounded-full bg-blue-100">
-              <LogIn className="w-8 h-8 text-primary" />
-            </div>
+      <div className="stat-cards-grid">
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Total Visitors Today</p>
+            <p className="stat-card-value">{stats?.total_visitors_today || 0}</p>
+          </div>
+          <div className="stat-card-icon">
+            <LogIn className="w-8 h-8" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Currently Parked</p>
-              <p className="text-3xl font-bold text-accent">{stats?.currently_parked || 0}</p>
-            </div>
-            <div className="p-4 rounded-full bg-blue-100">
-              <LogOut className="w-8 h-8 text-accent" />
-            </div>
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Currently Parked</p>
+            <p className="stat-card-value">{stats?.currently_parked || 0}</p>
+          </div>
+          <div className="stat-card-icon">
+            <LogOut className="w-8 h-8" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Today's Revenue</p>
-              <p className="text-3xl font-bold text-green-600">{(stats?.total_revenue_today || 0).toLocaleString()} VND</p>
-            </div>
-            <div className="p-4 rounded-full bg-green-100">
-              <DollarSign className="w-8 h-8 text-green-600" />
-            </div>
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Today's Revenue</p>
+            <p className="stat-card-value">{(stats?.total_revenue_today || 0).toLocaleString()}</p>
+          </div>
+          <div className="stat-card-icon">
+            <DollarSign className="w-8 h-8" />
           </div>
         </div>
       </div>
@@ -197,7 +192,7 @@ const VisitorsPage = () => {
                 Cancel
               </button>
               <button type="submit" className="btn-secondary">
-                Calculate & Record Exit
+                Calculate &amp; Record Exit
               </button>
             </div>
           </form>

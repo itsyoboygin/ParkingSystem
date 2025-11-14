@@ -20,6 +20,7 @@ const SubscriptionsPage = () => {
     fetchData();
   }, []);
 
+
   const fetchData = async () => {
     try {
       const [subsRes, expiringRes] = await Promise.all([
@@ -42,10 +43,10 @@ const SubscriptionsPage = () => {
       setShowForm(false);
       setForm({ vehicle_id: '', resident_id: '', subscription_type: 'monthly', cost: '' });
       fetchData();
-      alert('Subscription created successfully!');
+      console.log('[notification] success: Subscription created successfully');
     } catch (error) {
       console.error('Error creating subscription:', error);
-      alert('Failed to create subscription');
+      console.error('[notification] error:', error?.message || 'Failed to create subscription');
     }
   };
 
@@ -54,10 +55,10 @@ const SubscriptionsPage = () => {
       try {
         await renewSubscription(subscriptionId, { renewal_type: 'SAME' });
         fetchData();
-        alert('Subscription renewed successfully!');
+        console.log('[notification] success: Subscription renewed successfully');
       } catch (error) {
         console.error('Error renewing subscription:', error);
-        alert('Failed to renew subscription');
+        console.error('[notification] error:', error?.message || 'Failed to renew subscription');
       }
     }
   };
@@ -66,10 +67,10 @@ const SubscriptionsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="page-header mb-6 flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-primary mb-2">Parking Subscriptions</h1>
-          <p className="text-gray-600">Manage and renew parking subscriptions</p>
+          <h1>Parking Subscriptions</h1>
+          <p>Manage and renew parking subscriptions</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn-primary flex items-center">
           <Plus className="w-4 h-4 mr-2" />
@@ -157,7 +158,7 @@ const SubscriptionsPage = () => {
                     </div>
                     <button
                       onClick={() => handleRenew(sub.subscription_id)}
-                      className="btn-secondary flex items-center text-sm"
+                      className="btn-secondary"
                     >
                       <RefreshCw className="w-4 h-4 mr-1" />
                       Renew

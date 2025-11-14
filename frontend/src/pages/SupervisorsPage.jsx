@@ -40,50 +40,44 @@ const SupervisorsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">Supervisor Management</h1>
-        <p className="text-gray-600">Monitor shift schedules and fee collection tracking</p>
+      <div className="page-header mb-6">
+        <h1>Supervisor Management</h1>
+        <p>Monitor shift schedules and fee collection tracking</p>
       </div>
 
       {/* Supervisors Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Total Supervisors</p>
-              <p className="text-3xl font-bold text-primary">{supervisors.length}</p>
-            </div>
-            <div className="p-4 rounded-full bg-blue-100">
-              <UserCheck className="w-8 h-8 text-primary" />
-            </div>
+      <div className="stat-cards-grid">
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Total Supervisors</p>
+            <p className="stat-card-value">{supervisors.length}</p>
+          </div>
+          <div className="stat-card-icon">
+            <UserCheck className="w-8 h-8" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Active Shifts Today</p>
-              <p className="text-3xl font-bold text-accent">
-                {shifts.filter(s => !s.check_out_time && s.check_in_time && new Date(s.check_in_time).toDateString() === new Date().toDateString()).length}
-              </p>
-            </div>
-            <div className="p-4 rounded-full bg-blue-100">
-              <Clock className="w-8 h-8 text-accent" />
-            </div>
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Active Shifts Today</p>
+            <p className="stat-card-value">
+              {shifts.filter(s => !s.check_out_time && s.check_in_time && new Date(s.check_in_time).toDateString() === new Date().toDateString()).length}
+            </p>
+          </div>
+          <div className="stat-card-icon">
+            <Clock className="w-8 h-8" />
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium mb-1">Total Collection (Month)</p>
-              <p className="text-3xl font-bold text-green-600">
-                {reports.reduce((sum, r) => sum + (r.total_money_made || 0), 0).toLocaleString()} VND
-              </p>
-            </div>
-            <div className="p-4 rounded-full bg-green-100">
-              <DollarSign className="w-8 h-8 text-green-600" />
-            </div>
+        <div className="stat-card-item">
+          <div className="stat-card-content">
+            <p className="stat-card-label">Total Collection (Month)</p>
+            <p className="stat-card-value">
+              {reports.reduce((sum, r) => sum + (r.total_money_made || 0), 0).toLocaleString()}
+            </p>
+          </div>
+          <div className="stat-card-icon">
+            <DollarSign className="w-8 h-8" />
           </div>
         </div>
       </div>

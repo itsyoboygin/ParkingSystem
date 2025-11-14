@@ -48,10 +48,7 @@ const DashboardPage = () => {
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline"> {error}</span>
           </div>
-          <button 
-            onClick={fetchDashboardData}
-            className="btn-primary ml-4"
-          >
+          <button onClick={fetchDashboardData} className="btn-retry ml-4">
             Retry
           </button>
         </div>
@@ -111,14 +108,10 @@ const DashboardPage = () => {
   return (
     <div className="p-8 max-w-[1400px] mx-auto space-y-8 animate-slide-in">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="page-header mb-6 flex justify-between items-start">
         <div>
-          <h1 className="text-4xl font-black text-gray-800 mb-2 tracking-tight">
-            Welcome Back! 👋
-          </h1>
-          <p className="text-gray-500 text-lg font-medium">
-            Real-time parking management overview and analytics
-          </p>
+          <h1 className="text-4xl font-black">Welcome Back! 👋</h1>
+          <p className="text-gray-500">Real-time parking management overview and analytics</p>
         </div>
         <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-3 rounded-2xl border border-blue-200">
           <Clock className="w-5 h-5 text-blue-600" />

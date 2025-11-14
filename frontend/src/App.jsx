@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import DashboardPage from './pages/DashboardPage';
-import ResidentsPage from './pages/ResidentsPage';
-import SubscriptionsPage from './pages/SubscriptionsPage';
-import VisitorsPage from './pages/VisitorsPage';
-import SupervisorsPage from './pages/SupervisorsPage';
+import DashboardPage from './pages/DashboardPage.jsx';
+import ResidentsPage from './pages/ResidentsPage.jsx';
+import SubscriptionsPage from './pages/SubscriptionsPage.jsx';
+import VisitorsPage from './pages/VisitorsPage.jsx';
+import SupervisorsPage from './pages/SupervisorsPage.jsx';
 import './index.css';
 
 function App() {

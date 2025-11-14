@@ -28,6 +28,8 @@ const ResidentsPage = () => {
     fetchData();
   }, []);
 
+
+
   const fetchData = async () => {
     try {
       const [residentsRes, vehiclesRes] = await Promise.all([
@@ -66,10 +68,10 @@ const ResidentsPage = () => {
       setShowResidentForm(false);
       setResidentForm({ apartment_id: '', name: '', phone_number: '', email: '' });
       fetchData();
-      alert('Resident created successfully!');
+      console.log('[notification] success: Resident created successfully');
     } catch (error) {
       console.error('Error creating resident:', error);
-      alert('Failed to create resident');
+      console.error('[notification] error:', error?.message || 'Failed to create resident');
     }
   };
 
@@ -80,10 +82,10 @@ const ResidentsPage = () => {
       setShowVehicleForm(false);
       setVehicleForm({ resident_id: '', license_plate: '', vehicle_type: 'Car' });
       fetchData();
-      alert('Vehicle registered successfully!');
+      console.log('[notification] success: Vehicle registered successfully');
     } catch (error) {
       console.error('Error registering vehicle:', error);
-      alert('Failed to register vehicle');
+      console.error('[notification] error:', error?.message || 'Failed to register vehicle');
     }
   };
 
@@ -92,10 +94,10 @@ const ResidentsPage = () => {
       try {
         await deleteResident(id);
         fetchData();
-        alert('Resident deleted successfully!');
+        console.log('[notification] success: Resident deleted successfully');
       } catch (error) {
         console.error('Error deleting resident:', error);
-        alert('Failed to delete resident');
+        console.error('[notification] error:', error?.message || 'Failed to delete resident');
       }
     }
   };
@@ -105,10 +107,10 @@ const ResidentsPage = () => {
       try {
         await deleteVehicle(id);
         fetchData();
-        alert('Vehicle deleted successfully!');
+        console.log('[notification] success: Vehicle deleted successfully');
       } catch (error) {
         console.error('Error deleting vehicle:', error);
-        alert('Failed to delete vehicle');
+        console.error('[notification] error:', error?.message || 'Failed to delete vehicle');
       }
     }
   };
@@ -127,21 +129,20 @@ const ResidentsPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-primary mb-2">Residents & Vehicles</h1>
-          <p className="text-gray-600">Manage resident information and vehicle registrations</p>
-        </div>
-        <div className="flex space-x-3">
-          <button onClick={() => setShowResidentForm(!showResidentForm)} className="btn-primary flex items-center">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Resident
-          </button>
-          <button onClick={() => setShowVehicleForm(!showVehicleForm)} className="btn-secondary flex items-center">
-            <Plus className="w-4 h-4 mr-2" />
-            Register Vehicle
-          </button>
-        </div>
+      <div className="page-header mb-6">
+        <h1>Residents & Vehicles</h1>
+        <p>Manage resident information and vehicle registrations</p>
+      </div>
+
+      <div className="flex space-x-3">
+        <button onClick={() => setShowResidentForm(!showResidentForm)} className="btn-primary flex items-center">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Resident
+        </button>
+        <button onClick={() => setShowVehicleForm(!showVehicleForm)} className="btn-secondary flex items-center">
+          <Plus className="w-4 h-4 mr-2" />
+          Register Vehicle
+        </button>
       </div>
 
       {/* Search Bar */}
