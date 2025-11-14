@@ -154,7 +154,7 @@ const VisitorsPage = () => {
               />
             </div>
             <div className="md:col-span-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowEntryForm(false)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button type="button" onClick={() => setShowEntryForm(false)} className="btn-primary">
                 Cancel
               </button>
               <button type="submit" className="btn-primary">
@@ -188,7 +188,7 @@ const VisitorsPage = () => {
               </p>
             </div>
             <div className="flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowExitForm(false)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button type="button" onClick={() => setShowExitForm(false)} className="btn-secondary">
                 Cancel
               </button>
               <button type="submit" className="btn-secondary">
