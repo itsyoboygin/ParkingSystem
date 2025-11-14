@@ -126,7 +126,7 @@ const SubscriptionsPage = () => {
               />
             </div>
             <div className="md:col-span-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              <button type="button" onClick={() => setShowForm(false)} className="btn-primary">
                 Cancel
               </button>
               <button type="submit" className="btn-primary">
