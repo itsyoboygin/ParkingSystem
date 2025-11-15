@@ -39,7 +39,7 @@ const SupervisorsPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="dashboard-container">
       <div className="page-header mb-6">
         <h1>Supervisor Management</h1>
         <p>Monitor shift schedules and fee collection tracking</p>
@@ -149,7 +149,7 @@ const SupervisorsPage = () => {
           </div>
         </div>
       )}
-
+      <br></br>
       {/* Recent Shifts */}
       <div className="card">
         <h2 className="text-xl font-semibold text-primary mb-4">Recent Shifts</h2>

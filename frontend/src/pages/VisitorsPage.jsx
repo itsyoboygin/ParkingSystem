@@ -73,7 +73,7 @@ const VisitorsPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="dashboard-container">
       <div className="page-header mb-6 flex justify-between items-start">
         <div>
           <h1>Visitor Parking</h1>
@@ -164,7 +164,7 @@ const VisitorsPage = () => {
           </form>
         </div>
       )}
-
+      <br></br>
       {/* Exit Form */}
       {showExitForm && (
         <div className="card">
@@ -198,7 +198,7 @@ const VisitorsPage = () => {
           </form>
         </div>
       )}
-
+      <br></br>
       {/* Active Visitors */}
       {activeVisitors.length > 0 && (
         <div className="card">
@@ -238,7 +238,7 @@ const VisitorsPage = () => {
           </div>
         </div>
       )}
-
+      <br></br>
       {/* Visitor History */}
       <div className="card">
         <h2 className="text-xl font-semibold text-primary mb-4">Recent Visitor History</h2>

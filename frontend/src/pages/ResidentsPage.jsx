@@ -128,7 +128,7 @@ const ResidentsPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="dashboard-container">
       <div className="page-header mb-6 flex justify-between items-start">
         <h1>Residents & Vehicles</h1>
         <p>Manage resident information and vehicle registrations</p>
