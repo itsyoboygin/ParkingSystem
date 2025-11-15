@@ -106,67 +106,67 @@ const DashboardPage = () => {
   );
 
   return (
-    <div className="p-8 max-w-[1400px] mx-auto space-y-8 animate-slide-in">
+    <div className="dashboard-container">
       {/* Page Header */}
-      <div className="page-header mb-6 flex justify-between items-start">
+      <div className="dashboard-header">
         <div>
-          <h1 className="text-4xl font-black">Welcome Back! 👋</h1>
-          <p className="text-gray-500">Real-time parking management overview and analytics</p>
-        </div>
-        <div className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-3 rounded-2xl border border-blue-200">
+          <h1>Welcome Back! 👋</h1>
+          <p>Real-time parking management overview and analytics</p>
           <Clock className="w-5 h-5 text-blue-600" />
-          <span className="text-blue-900 font-semibold">
+          <p>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-          </span>
+          </p>
         </div>
       </div>
 
-      {/* Stats Grid - Horizontal Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <StatCard
-          title="Active Subscriptions"
-          value={stats?.active_subscriptions || 0}
-          icon={Users}
-          gradient="bg-gradient-to-br from-blue-600 to-blue-700"
-          trend={12}
-        />
-        <StatCard
-          title="Current Visitors"
-          value={stats?.current_visitors || 0}
-          icon={Car}
-          gradient="bg-gradient-to-br from-cyan-500 to-cyan-600"
-          trend={8}
-        />
-        <StatCard
-          title="Today's Revenue"
-          value={`${(stats?.today_visitor_revenue || 0).toLocaleString()}`}
-          icon={DollarSign}
-          gradient="bg-gradient-to-br from-green-500 to-green-600"
-          subtitle="VND"
-        />
-        <StatCard
-          title="Expiring Soon"
-          value={stats?.expiring_soon || 0}
-          icon={Clock}
-          gradient="bg-gradient-to-br from-orange-500 to-orange-600"
-          subtitle="Within 7 days"
-        />
+      {/* Stats Grid */}
+      <div className="dashboard-stats">
+        <div className="stat-card">
+          <div className="stat-card-content">
+            <div className="stat-card-label">Active Subscriptions</div>
+            <div className="stat-card-value">{stats?.active_subscriptions || 0}</div>
+          </div>
+          <div className="stat-card-icon">👥</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-content">
+            <div className="stat-card-label">Current Visitors</div>
+            <div className="stat-card-value">{stats?.current_visitors || 0}</div>
+          </div>
+          <div className="stat-card-icon">👥</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-content">
+            <div className="stat-card-label">Today's Revenue</div>
+            <div className="stat-card-value">{stats?.today_visitor_revenue || 0}</div>
+          </div>
+          <div className="stat-card-icon">👥</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-card-content">
+            <div className="stat-card-label">Expiring Soon</div>
+            <div className="stat-card-value">{stats?.expiring_soon || 0}</div>
+          </div>
+          <div className="stat-card-icon">👥</div>
+        </div>
       </div>
 
-      {/* Charts Row - Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Section */}
+      <div className="dashboard-stats">
         {/* Parking Occupancy Chart */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 rounded-xl">
-                <ParkingSquare className="w-6 h-6 text-white" strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-800">Parking Occupancy</h2>
-                <p className="text-sm text-gray-500 font-medium">Current space utilization</p>
-              </div>
+        <div className="chart-card">
+          <div className="stat-card-content">
+            <div>
+              <ParkingSquare className="w-6 h-6 text-white" strokeWidth={2.5} />
             </div>
+            <br></br>
+            <div className="section-title">
+              Parking Occupancy
+            </div>
+            <p className="text-sm text-gray-500 font-medium">Current space utilization</p>
             <div className="badge badge-primary px-4 py-2 text-sm font-bold">Live</div>
           </div>
           
@@ -208,60 +208,56 @@ const DashboardPage = () => {
         </div>
 
         {/* Visitor Statistics */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="chart-card">
+          <div className="stat-card-content">
             <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 p-3 rounded-xl">
               <Activity className="w-6 h-6 text-white" strokeWidth={2.5} />
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-800">Visitor Activity</h2>
-              <p className="text-sm text-gray-500 font-medium">Today's statistics</p>
-            </div>
+            <br></br>
+            <div className="section-title">Visitor Activity</div>
+            <p className="text-sm text-gray-500 font-medium">Today's statistics</p>
           </div>
-          
+
+          <br></br>
+
           <div className="space-y-4">
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl"></div>
               <div className="relative flex items-center justify-between p-5 rounded-xl border-2 border-blue-100 hover:border-blue-300 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl">
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
                   <div>
-                    <div className="text-sm text-gray-500 font-semibold uppercase">Total Visitors</div>
+                    <div className="text-sm text-gray-500 font-semibold uppercase"><Users className="w-6 h-6 text-white" /> Total Visitors</div>
                     <div className="text-3xl font-black text-gray-800">{visitorStats?.total_visitors_today || 0}</div>
                   </div>
                 </div>
               </div>
             </div>
             
+            <br></br>
+
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-cyan-600/10 rounded-xl"></div>
               <div className="relative flex items-center justify-between p-5 rounded-xl border-2 border-cyan-100 hover:border-cyan-300 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 p-3 rounded-xl">
-                    <Car className="w-6 h-6 text-white" />
-                  </div>
                   <div>
-                    <div className="text-sm text-gray-500 font-semibold uppercase">Currently Parked</div>
+                    <div className="text-sm text-gray-500 font-semibold uppercase"><Car className="w-6 h-6 text-white" /> Currently Parked</div>
                     <div className="text-3xl font-black text-gray-800">{visitorStats?.currently_parked || 0}</div>
                   </div>
                 </div>
               </div>
             </div>
             
+            <br></br>
+
             <div className="relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-green-600/10 rounded-xl"></div>
               <div className="relative flex items-center justify-between p-5 rounded-xl border-2 border-green-100 hover:border-green-300 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="bg-gradient-to-br from-green-500 to-green-600 p-3 rounded-xl">
-                    <DollarSign className="w-6 h-6 text-white" />
-                  </div>
                   <div>
-                    <div className="text-sm text-gray-500 font-semibold uppercase">Total Revenue</div>
+                    <div className="text-sm text-gray-500 font-semibold uppercase"><DollarSign className="w-6 h-6 text-white" /> Total Revenue</div>
                     <div className="text-3xl font-black text-gray-800">
                       {(visitorStats?.total_revenue_today || 0).toLocaleString()}
-                      <span className="text-lg text-gray-500 ml-2">VND</span>
+                      <span className="text-lg text-gray-500 ml-2"> VND</span>
                     </div>
                   </div>
                 </div>
@@ -337,9 +333,9 @@ const DashboardPage = () => {
 
       {/* Alerts */}
       {alerts.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
+        <div className="chart-card">
+          <div className="stat-card-content">
+            <div className="alert-title">
               <div className="bg-gradient-to-br from-red-500 to-red-600 p-3 rounded-xl animate-pulse">
                 <AlertCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
@@ -352,22 +348,20 @@ const DashboardPage = () => {
               {alerts.length} active
             </div>
           </div>
-          
+          <br></br>
           <div className="space-y-3">
             {alerts.slice(0, 5).map((alert, index) => (
               <div
                 key={index}
                 className="flex items-start gap-4 p-5 rounded-xl border-2 border-red-200 bg-red-50 hover:bg-red-100 hover:border-red-300 transition-all"
               >
-                <div className="bg-red-500 p-2 rounded-lg">
-                  <AlertCircle className="w-5 h-5 text-white" />
-                </div>
                 <div className="flex-1">
                   <p className="font-bold text-red-900 mb-1 text-lg">
-                    {alert.alert_type?.replace(/_/g, ' ').toUpperCase() || 'UNKNOWN ALERT'}
+                    <AlertCircle className="w-5 h-5 text-white" /> {alert.alert_type?.replace(/_/g, ' ').toUpperCase() || 'UNKNOWN ALERT'}
                   </p>
                   <p className="text-red-700 font-medium">{alert.message || 'No message available'}</p>
                 </div>
+                <br></br>
               </div>
             ))}
           </div>
