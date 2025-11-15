@@ -563,6 +563,31 @@ table td {
   transition: all 0.25s ease;
 }
 
+.occupancy-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.legend-color {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+}
+
+.legend-text p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
 /* Alert Enhancements */
 .alerts-section {
   background: white;

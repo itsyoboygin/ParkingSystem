@@ -190,16 +190,14 @@ const DashboardPage = () => {
               </PieChart>
             </ResponsiveContainer>
             
-            <div className="flex flex-col gap-4 flex-1 pl-6">
+            <div className="occupancy-legend">
               {occupancyData.map((entry, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: entry.color }}></div>
-                    <span className="font-semibold text-gray-700">{entry.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-black text-gray-800">{entry.value}</div>
-                    <div className="text-sm text-gray-500 font-medium">{entry.percentage}%</div>
+                <div key={index} className="legend-item">
+                  <span className="legend-color" style={{ backgroundColor: entry.color }}></span>
+                  <div className="legend-text">
+                    <strong>{entry.name}</strong>
+                    <p>{entry.value.toLocaleString()} spaces</p>
+                    <p>{entry.percentage}%</p>
                   </div>
                 </div>
               ))}
