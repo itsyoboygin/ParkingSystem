@@ -28,6 +28,8 @@ body {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
   transition: all 0.3s;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .card:hover {
@@ -78,8 +80,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.15rem;
-  /* primary buttons use a dark pink */
-  background-color: #b91c5b;
+  background-color: #1e40af;
   color: white;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -89,7 +90,7 @@ body {
   transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
 }
 
-.btn-primary:hover { background-color: #991746; transform: translateY(-1px); }
+.btn-primary:hover { background-color: #1e3a8a; transform: translateY(-1px); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-secondary {
@@ -97,8 +98,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.55rem 1rem;
-  /* secondary buttons use a lighter pink */
-  background-color: #ec4899;
+  background-color: #0ea5e9;
   color: white;
   border-radius: 0.75rem;
   font-weight: 600;
@@ -108,7 +108,7 @@ body {
   transition: transform 0.12s ease, background-color 0.12s ease;
 }
 
-.btn-secondary:hover { background-color: #db2777; transform: translateY(-1px); }
+.btn-secondary:hover { background-color: #0284c7; transform: translateY(-1px); }
 .btn-secondary:active { transform: scale(0.98); }
 
 .btn-outline {
@@ -148,19 +148,6 @@ body {
   border: none;
   cursor: pointer;
 }
-
-/* Pink variants */
-.btn-pink {
-  background-color: #ec4899;
-  color: white;
-}
-.btn-pink:hover { background-color: #db2777; }
-
-.btn-rose { background-color: #f43f5e; color: white; }
-.btn-rose:hover { background-color: #e11d48; }
-
-.btn-fuchsia { background-color: #d946ef; color: white; }
-.btn-fuchsia:hover { background-color: #c026d3; }
 
 /* Retry (accented pink) */
 .btn-retry {
@@ -217,7 +204,7 @@ body {
   box-shadow: 0 0 0 2px var(--color-accent);
 }
 
-/* Table Styles - Modern with better readability */
+/* Table Styles */
 .table-container {
   overflow: hidden;
   border-radius: 1rem;
@@ -237,7 +224,6 @@ body {
   border-bottom: 2px solid #e5e7eb;
 }
 
-/* Improved Table Styling */
 table {
   width: 100%;
   border-collapse: separate;
@@ -303,6 +289,101 @@ table td {
 
 .table-row-striped:nth-child(even) {
   background-color: #f9fafb;
+}
+
+/* Sub Tabs */
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(30, 64, 175, 0.3);
+}
+
+/* Pagination Styles */
+.table-pagination {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.table-pagination .page-info {
+  font-weight: 500;
+}
+
+.table-pagination .page-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.table-pagination button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.table-pagination button:hover {
+  background-color: #f3f4f6;
+}
+
+
+.table-pagination button.active {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3);
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+.table-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive Table */
+.table-container, .overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+}
+
+table td, table th{
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /* Badge Styles */
@@ -429,6 +510,7 @@ table td {
   border: 1px solid #f0f1f3;
   background: white;
   transition: all 0.25s ease;
+  margin-bottom: 2rem;
 }
 
 .card:hover {
@@ -982,5 +1064,25 @@ nav.sidebar-nav.collapsed a span{
   
   .stat-card {
     padding: 1rem;
+  }
+}
+
+/* Responsive Table Enhancements */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  table th, table td {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  
+  .table-pagination {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

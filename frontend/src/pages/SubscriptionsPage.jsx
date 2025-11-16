@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getSubscriptions, createSubscription, renewSubscription, getExpiringSubscriptions } from '../api/client';
 import Loading from '../components/Loading';
-import { Plus, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Plus, RefreshCw, AlertTriangle, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const SubscriptionsPage = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [expiring, setExpiring] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const [form, setForm] = useState({
     vehicle_id: '',
@@ -62,6 +65,24 @@ const SubscriptionsPage = () => {
       }
     }
   };
+
+  // Filter subscriptions based on search term
+  const filteredSubscriptions = subscriptions.filter(sub =>
+    sub.resident_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sub.license_plate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sub.subscription_id?.toString().includes(searchTerm)
+  );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredSubscriptions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentSubscriptions = filteredSubscriptions.slice(startIndex, endIndex);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   if (loading) return <Loading />;
 
@@ -125,11 +146,12 @@ const SubscriptionsPage = () => {
                 required
               />
             </div>
-            <div className="md:col-span-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowForm(false)} className="btn-primary">
+            <br></br>
+            <div className="md:col-span-2 flex justify-end space-x-3 margin-top: 1rem;">
+              <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
                 Cancel
               </button>
-              <button type="submit" className="btn-primary">
+              <button type="submit" className="btn-secondary">
                 Create Subscription
               </button>
             </div>
@@ -171,10 +193,26 @@ const SubscriptionsPage = () => {
         </div>
       )}
 
+      {/* Search Bar */}
+      <div className="card">
+        <div className="flex items-center">
+          <Search className="w-5 h-5 text-gray-400 mr-2" />
+          <input
+            type="text"
+            placeholder="Search by ID, resident name, or license plate..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input-field"
+          />
+        </div>
+      </div>
+
       {/* All Subscriptions Table */}
       <div className="card">
-        <h2 className="text-xl font-semibold text-primary mb-4">All Subscriptions ({subscriptions.length})</h2>
-        <div className="overflow-x-auto">
+        <h2 className="text-xl font-semibold text-primary mb-4">
+          All Subscriptions ({filteredSubscriptions.length})
+        </h2>
+        <div className="overflow-x-auto table-container">
           <table className="w-full">
             <thead>
               <tr>
@@ -189,7 +227,7 @@ const SubscriptionsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {subscriptions.slice(0, 20).map((sub, idx) => {
+              {currentSubscriptions.map((sub, idx) => {
                 const isExpiring = sub.expiration_date && (new Date(sub.expiration_date) - new Date() < 7 * 24 * 60 * 60 * 1000);
                 const isExpired = sub.expiration_date && (new Date(sub.expiration_date) < new Date());
                 
@@ -227,6 +265,68 @@ const SubscriptionsPage = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="table-pagination">
+            <div className="page-info">
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredSubscriptions.length)} of {filteredSubscriptions.length} subscriptions
+            </div>
+            <div className="page-controls">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1 rounded border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Previous
+              </button>
+
+              <div className="page-controls">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                  // Show first page, last page, current page, and pages around current
+                  const showPage =
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+
+                  const showEllipsis =
+                    (page === currentPage - 2 && currentPage > 3) ||
+                    (page === currentPage + 2 && currentPage < totalPages - 2);
+
+                  if (showEllipsis) {
+                    return <span key={page} className="px-2">...</span>;
+                  }
+
+                  if (!showPage) return null;
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-3 py-1 rounded border ${
+                        currentPage === page
+                          ? 'active'
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 rounded border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

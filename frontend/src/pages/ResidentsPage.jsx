@@ -28,8 +28,10 @@ const ResidentsPage = () => {
     fetchData();
   }, []);
 
+  // Sub Tabs
+  const [activeTab, setActiveTab] = useState('residents');
 
-
+  // Data Fetching
   const fetchData = async () => {
     try {
       const [residentsRes, vehiclesRes] = await Promise.all([
@@ -125,6 +127,21 @@ const ResidentsPage = () => {
     v.resident_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  /* Pagination Logic */
+  const itemsPerPage = 20;
+  const [currentPageResidents, setCurrentPageResidents] = useState(1);
+  const [currentPageVehicles, setCurrentPageVehicles] = useState(1);
+
+  const totalPagesResidents = Math.ceil(filteredResidents.length / itemsPerPage);
+  const startIndexResidents = (currentPageResidents - 1) * itemsPerPage;
+  const endIndexResidents = startIndexResidents + itemsPerPage;
+  const currentResidents = filteredResidents.slice(startIndexResidents, endIndexResidents);
+
+  const totalPagesVehicles = Math.ceil(filteredVehicles.length / itemsPerPage);
+  const startIndexVehicles = (currentPageVehicles - 1) * itemsPerPage;
+  const endIndexVehicles = startIndexVehicles + itemsPerPage;
+  const currentVehicles = filteredVehicles.slice(startIndexVehicles, endIndexVehicles);
+
   if (loading) return <Loading />;
 
   return (
@@ -134,223 +151,289 @@ const ResidentsPage = () => {
         <p>Manage resident information and vehicle registrations</p>
       </div>
 
-      <div className="flex space-x-3">
-        <button onClick={() => setShowResidentForm(!showResidentForm)} className="btn-primary flex items-center">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Resident
+      {/* Tabs */}
+      <div className="tabs-container">
+        <button
+          className={`tab-btn ${activeTab === 'residents' ? 'active' : ''}`}
+          onClick={() => setActiveTab('residents')}
+        >
+          Residents
         </button>
-        <button onClick={() => setShowVehicleForm(!showVehicleForm)} className="btn-secondary flex items-center">
-          <Plus className="w-4 h-4 mr-2" />
-          Register Vehicle
+        <button
+          className={`tab-btn ${activeTab === 'vehicles' ? 'active' : ''}`}
+          onClick={() => setActiveTab('vehicles')}
+        >
+          Vehicles
         </button>
       </div>
 
-      {/* Search Bar */}
-      <div className="card">
-        <div className="flex items-center">
-          <Search className="w-5 h-5 text-gray-400 mr-2" />
-          <input
-            type="text"
-            placeholder="Search by name, email, or license plate..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="input-field"
-          />
-        </div>
-      </div>
+      {activeTab === 'residents' && (
+        <div>
+          <button onClick={() => setShowResidentForm(!showResidentForm)} className="btn-secondary flex items-center">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Resident
+          </button>
 
-      {/* Resident Form */}
-      {showResidentForm && (
-        <div className="card">
-          <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
-            <User className="w-5 h-5 mr-2" />
-            New Resident
-          </h2>
-          <form onSubmit={handleCreateResident} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Apartment ID</label>
-              <input
-                type="number"
-                value={residentForm.apartment_id}
-                onChange={(e) => setResidentForm({...residentForm, apartment_id: e.target.value})}
-                className="input-field"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+          {/* Search Bar */}
+          <div className="card">
+            <div className="flex items-center">
+              <Search className="w-5 h-5 text-gray-400 mr-2" />
               <input
                 type="text"
-                value={residentForm.name}
-                onChange={(e) => setResidentForm({...residentForm, name: e.target.value})}
+                placeholder="Search by name, email, or license plate..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="input-field"
-                required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <input
-                type="text"
-                value={residentForm.phone_number}
-                onChange={(e) => setResidentForm({...residentForm, phone_number: e.target.value})}
-                className="input-field"
-                required
-              />
+          </div>
+
+          {/* Resident Form */}
+          {showResidentForm && (
+            <div className="card">
+              <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
+                <User className="w-5 h-5 mr-2" />
+                New Resident
+              </h2>
+              <form onSubmit={handleCreateResident} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Apartment ID</label>
+                  <input
+                    type="number"
+                    value={residentForm.apartment_id}
+                    onChange={(e) => setResidentForm({...residentForm, apartment_id: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    value={residentForm.name}
+                    onChange={(e) => setResidentForm({...residentForm, name: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                  <input
+                    type="text"
+                    value={residentForm.phone_number}
+                    onChange={(e) => setResidentForm({...residentForm, phone_number: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={residentForm.email}
+                    onChange={(e) => setResidentForm({...residentForm, email: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <br></br>
+                <div className="md:col-span-2 flex justify-end space-x-3">
+                  <button type="button" onClick={() => setShowResidentForm(false)} className="btn-secondary">
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn-secondary">
+                    Create Resident
+                  </button>
+                </div>
+              </form>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={residentForm.email}
-                onChange={(e) => setResidentForm({...residentForm, email: e.target.value})}
-                className="input-field"
-                required
-              />
+          )}
+
+          {/* Residents Table */}
+          <div className="card">
+            <h2 className="text-xl font-semibold text-primary mb-4">Residents ({filteredResidents.length})</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="table-header rounded-tl-lg">ID</th>
+                    <th className="table-header">Name</th>
+                    <th className="table-header">Building</th>
+                    <th className="table-header">Floor</th>
+                    <th className="table-header">Phone</th>
+                    <th className="table-header">Email</th>
+                    <th className="table-header rounded-tr-lg">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white">
+                  {filteredResidents.slice(0, 20).map((resident) => (
+                    <tr key={`resident-${resident.resident_id}`} className="hover:bg-gray-50">
+                      <td className="table-cell">{resident.resident_id}</td>
+                      <td className="table-cell font-medium">{resident.name}</td>
+                      <td className="table-cell">{resident.building_id}</td>
+                      <td className="table-cell">{resident.floor}</td>
+                      <td className="table-cell">{resident.phone_number}</td>
+                      <td className="table-cell">{resident.email}</td>
+                      <td className="table-cell">
+                        <button
+                          onClick={() => handleDeleteResident(resident.resident_id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="md:col-span-2 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowResidentForm(false)} className="btn-primary">
-                Cancel
-              </button>
-              <button type="submit" className="btn-primary">
-                Create Resident
-              </button>
+
+            {/* Pagination Controls for Residents */}
+            <div className="table-pagination">
+              <div className="page-info">
+                Showing {startIndexResidents + 1} to {Math.min(endIndexResidents, filteredResidents.length)} of {filteredResidents.length} residents
+              </div>
+              <div className="page-controls">
+                <button onClick={() => setCurrentPageResidents(prev => Math.max(prev - 1, 1))} disabled={currentPageResidents === 1}>Previous</button>
+                {Array.from({ length: totalPagesResidents }, (_, i) => i + 1).map(page => (
+                  <button key={page} onClick={() => setCurrentPageResidents(page)} className={currentPageResidents === page ? 'active' : ''}>{page}</button>
+                ))}
+                <button onClick={() => setCurrentPageResidents(prev => Math.min(prev + 1, totalPagesResidents))} disabled={currentPageResidents === totalPagesResidents}>Next</button>
+              </div>
             </div>
-          </form>
+          </div>
         </div>
       )}
 
-      {/* Vehicle Form */}
-      {showVehicleForm && (
-        <div className="card">
-          <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
-            <Car className="w-5 h-5 mr-2" />
+      {activeTab === 'vehicles' && (
+        <div>
+          <button onClick={() => setShowVehicleForm(!showVehicleForm)} className="btn-secondary flex items-center">
+            <Plus className="w-4 h-4 mr-2" />
             Register Vehicle
-          </h2>
-          <form onSubmit={handleCreateVehicle} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Resident ID</label>
-              <input
-                type="number"
-                value={vehicleForm.resident_id}
-                onChange={(e) => setVehicleForm({...vehicleForm, resident_id: e.target.value})}
-                className="input-field"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">License Plate</label>
+          </button>
+
+          {/* Search Bar */}
+          <div className="card">
+            <div className="flex items-center">
+              <Search className="w-5 h-5 text-gray-400 mr-2" />
               <input
                 type="text"
-                value={vehicleForm.license_plate}
-                onChange={(e) => setVehicleForm({...vehicleForm, license_plate: e.target.value})}
+                placeholder="Search by name, email, or license plate..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="input-field"
-                required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
-              <select
-                value={vehicleForm.vehicle_type}
-                onChange={(e) => setVehicleForm({...vehicleForm, vehicle_type: e.target.value})}
-                className="input-field"
-              >
-                <option value="Car">Car</option>
-                <option value="Motorcycle">Motorcycle</option>
-                <option value="EV_Car">EV Car</option>
-                <option value="EV_Motorcycle">EV Motorcycle</option>
-              </select>
-            </div>
-            <div className="md:col-span-3 flex justify-end space-x-3">
-              <button type="button" onClick={() => setShowVehicleForm(false)} className="btn-secondary">
-                Cancel
-              </button>
-              <button type="submit" className="btn-secondary">
+          </div>
+
+          {/* Vehicle Form */}
+          {showVehicleForm && (
+            <div className="card">
+              <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
+                <Car className="w-5 h-5 mr-2" />
                 Register Vehicle
-              </button>
+              </h2>
+              <form onSubmit={handleCreateVehicle} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Resident ID</label>
+                  <input
+                    type="number"
+                    value={vehicleForm.resident_id}
+                    onChange={(e) => setVehicleForm({...vehicleForm, resident_id: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">License Plate</label>
+                  <input
+                    type="text"
+                    value={vehicleForm.license_plate}
+                    onChange={(e) => setVehicleForm({...vehicleForm, license_plate: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
+                  <select
+                    value={vehicleForm.vehicle_type}
+                    onChange={(e) => setVehicleForm({...vehicleForm, vehicle_type: e.target.value})}
+                    className="input-field"
+                  >
+                    <option value="Car">Car</option>
+                    <option value="Motorcycle">Motorcycle</option>
+                    <option value="EV_Car">EV Car</option>
+                    <option value="EV_Motorcycle">EV Motorcycle</option>
+                  </select>
+                </div>
+                <div className="md:col-span-3 flex justify-end space-x-3">
+                  <button type="button" onClick={() => setShowVehicleForm(false)} className="btn-secondary">
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn-secondary">
+                    Register Vehicle
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
+          )}
+
+          {/* Vehicles Table */}
+          <div className="card">
+            <h2 className="text-xl font-semibold text-primary mb-4">Vehicles ({filteredVehicles.length})</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="table-header rounded-tl-lg">ID</th>
+                    <th className="table-header">License Plate</th>
+                    <th className="table-header">Type</th>
+                    <th className="table-header">Owner</th>
+                    <th className="table-header rounded-tr-lg">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white">
+                  {filteredVehicles.slice(0, 20).map((vehicle) => (
+                    <tr key={`vehicle-${vehicle.vehicle_id}`} className="hover:bg-gray-50">
+                      <td className="table-cell">{vehicle.vehicle_id}</td>
+                      <td className="table-cell font-mono font-bold">{vehicle.license_plate}</td>
+                      <td className="table-cell">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                          {vehicle.vehicle_type}
+                        </span>
+                      </td>
+                      <td className="table-cell">{vehicle.resident_name}</td>
+                      <td className="table-cell">
+                        <button
+                          onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls for Vehicles */}
+            <div className="table-pagination">
+              <div className="page-info">
+                Showing {startIndexResidents + 1} to {Math.min(endIndexVehicles, filteredVehicles.length)} of {filteredVehicles.length} vehicles
+              </div>
+              <div className="page-controls">
+                <button onClick={() => setCurrentPageVehicles(prev => Math.max(prev - 1, 1))} disabled={currentPageVehicles === 1}>Previous</button>
+                {Array.from({ length: totalPagesResidents }, (_, i) => i + 1).map(page => (
+                  <button key={page} onClick={() => setCurrentPageVehicles(page)} className={currentPageVehicles === page ? 'active' : ''}>{page}</button>
+                ))}
+                <button onClick={() => setCurrentPageVehicles(prev => Math.min(prev + 1, totalPagesVehicles))} disabled={currentPageVehicles === totalPagesVehicles}>Next</button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
-
-      {/* Residents Table */}
-      <div className="card">
-        <h2 className="text-xl font-semibold text-primary mb-4">Residents ({filteredResidents.length})</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th className="table-header rounded-tl-lg">ID</th>
-                <th className="table-header">Name</th>
-                <th className="table-header">Building</th>
-                <th className="table-header">Floor</th>
-                <th className="table-header">Phone</th>
-                <th className="table-header">Email</th>
-                <th className="table-header rounded-tr-lg">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {filteredResidents.slice(0, 20).map((resident) => (
-                <tr key={`resident-${resident.resident_id}`} className="hover:bg-gray-50">
-                  <td className="table-cell">{resident.resident_id}</td>
-                  <td className="table-cell font-medium">{resident.name}</td>
-                  <td className="table-cell">{resident.building_id}</td>
-                  <td className="table-cell">{resident.floor}</td>
-                  <td className="table-cell">{resident.phone_number}</td>
-                  <td className="table-cell">{resident.email}</td>
-                  <td className="table-cell">
-                    <button
-                      onClick={() => handleDeleteResident(resident.resident_id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Vehicles Table */}
-      <div className="card">
-        <h2 className="text-xl font-semibold text-primary mb-4">Vehicles ({filteredVehicles.length})</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th className="table-header rounded-tl-lg">ID</th>
-                <th className="table-header">License Plate</th>
-                <th className="table-header">Type</th>
-                <th className="table-header">Owner</th>
-                <th className="table-header rounded-tr-lg">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {filteredVehicles.slice(0, 20).map((vehicle) => (
-                <tr key={`vehicle-${vehicle.vehicle_id}`} className="hover:bg-gray-50">
-                  <td className="table-cell">{vehicle.vehicle_id}</td>
-                  <td className="table-cell font-mono font-bold">{vehicle.license_plate}</td>
-                  <td className="table-cell">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                      {vehicle.vehicle_type}
-                    </span>
-                  </td>
-                  <td className="table-cell">{vehicle.resident_name}</td>
-                  <td className="table-cell">
-                    <button
-                      onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 };

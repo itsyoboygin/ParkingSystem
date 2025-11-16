@@ -36,6 +36,56 @@ const SupervisorsPage = () => {
     }
   };
 
+  /* Pagination Logic */
+  const itemsPerPage = 20;
+  const paginate = (data, currentPage) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return data.slice(startIndex, endIndex);
+  };
+
+  const [currentPageSupervisors, setCurrentPageSupervisors] = useState(1);
+  const [currentPageReports, setCurrentPageReports] = useState(1);
+  const [currentPageShifts, setCurrentPageShifts] = useState(1); 
+  
+  const currentSupervisors = paginate(supervisors, currentPageSupervisors);
+  const currentReports = paginate(reports, currentPageReports);
+  const currentShifts = paginate(shifts, currentPageShifts);
+
+  
+  const totalPagesSupervisors = Math.ceil(supervisors.length / itemsPerPage);
+  const totalPagesReports = Math.ceil(reports.length / itemsPerPage);
+  const totalPagesShifts = Math.ceil(shifts.length / itemsPerPage);
+
+  
+  const renderPagination = (currentPage, setCurrentPage, totalPages) => (
+    <div className="table-pagination">
+      <div className="page-controls">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={currentPage === page ? 'active' : ''}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+  
   if (loading) return <Loading />;
 
   return (
@@ -107,6 +157,8 @@ const SupervisorsPage = () => {
             </tbody>
           </table>
         </div>
+
+        {renderPagination(currentPageSupervisors, setCurrentPageSupervisors, totalPagesSupervisors)}
       </div>
 
       {/* Monthly Financial Report */}
@@ -147,6 +199,9 @@ const SupervisorsPage = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {renderPagination(currentPageReports, setCurrentPageReports, totalPagesReports)}
         </div>
       )}
       <br></br>
@@ -166,7 +221,7 @@ const SupervisorsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {shifts.slice(0, 20).map((shift, idx) => (
+              {currentShifts.map((shift, idx) => (
                 <tr key={`shift-${shift.shift_id || 'unknown'}-${idx}`} className="hover:bg-gray-50">
                   <td className="table-cell">{shift.shift_id}</td>
                   <td className="table-cell font-medium">{shift.supervisor_name || 'N/A'}</td>
@@ -188,6 +243,9 @@ const SupervisorsPage = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {renderPagination(currentPageShifts, setCurrentPageShifts, totalPagesShifts)}
       </div>
     </div>
   );

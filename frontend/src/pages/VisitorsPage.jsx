@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getVisitors, getActiveVisitors, getVisitorStats, recordVisitorEntry, recordVisitorExit } from '../api/client';
 import Loading from '../components/Loading';
 import { LogIn, LogOut, DollarSign } from 'lucide-react';
+import Pagination from '../components/Pagination';
 
 const VisitorsPage = () => {
   const [visitors, setVisitors] = useState([]);
@@ -29,7 +30,7 @@ const VisitorsPage = () => {
     try {
       const [visitorsRes, activeRes, statsRes] = await Promise.all([
         getVisitors(50, 0),
-        getActiveVisitors(),
+        getActiveVisitors(999, 0),
         getVisitorStats()
       ]);
       setVisitors(visitorsRes.data?.data || []);
@@ -69,6 +70,20 @@ const VisitorsPage = () => {
       console.error('[notification] error:', error?.message || 'Failed to record exit');
     }
   };
+
+  /* Pagination Logic */
+  const [currentPageVisitors, setCurrentPageVisitors] = useState(1);
+  const itemsPerPage = 20;
+  const totalPagesVisitors = Math.ceil(visitors.length / itemsPerPage);
+  const startIndexVisitors = (currentPageVisitors - 1) * itemsPerPage;
+  const endIndexVisitors = startIndexVisitors + itemsPerPage;
+  const currentVisitors = visitors.slice(startIndexVisitors, endIndexVisitors);
+
+  const [currentPageActive, setCurrentPageActive] = useState(1);
+  const totalActivePages = Math.ceil(activeVisitors.length / itemsPerPage);
+  const startIndexActive = (currentPageActive - 1) * itemsPerPage;
+  const endIndexActive = startIndexActive + itemsPerPage;
+  const currentActiveVisitors = activeVisitors.slice(startIndexActive, endIndexActive);
 
   if (loading) return <Loading />;
 
@@ -128,7 +143,7 @@ const VisitorsPage = () => {
       {showEntryForm && (
         <div className="card">
           <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
-            <LogIn className="w-5 h-5 mr-2" />
+            <LogIn className="w-5 h-5 mr-2" /><br></br>
             Record Visitor Entry
           </h2>
           <form onSubmit={handleEntry} className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,6 +168,7 @@ const VisitorsPage = () => {
                 required
               />
             </div>
+            <br></br>
             <div className="md:col-span-2 flex justify-end space-x-3">
               <button type="button" onClick={() => setShowEntryForm(false)} className="btn-primary">
                 Cancel
@@ -169,7 +185,7 @@ const VisitorsPage = () => {
       {showExitForm && (
         <div className="card">
           <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
-            <LogOut className="w-5 h-5 mr-2" />
+            <LogOut className="w-5 h-5 mr-2" /><br></br>
             Record Visitor Exit & Calculate Fee
           </h2>
           <form onSubmit={handleExit} className="space-y-4">
@@ -187,6 +203,7 @@ const VisitorsPage = () => {
                 Fee: Day rate (6:00-18:00) 15,000 VND/hour | Night rate (18:00-6:00) 10,000 VND/hour
               </p>
             </div>
+            <br></br>
             <div className="flex justify-end space-x-3">
               <button type="button" onClick={() => setShowExitForm(false)} className="btn-secondary">
                 Cancel
@@ -198,7 +215,7 @@ const VisitorsPage = () => {
           </form>
         </div>
       )}
-      <br></br>
+
       {/* Active Visitors */}
       {activeVisitors.length > 0 && (
         <div className="card">
@@ -215,7 +232,7 @@ const VisitorsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {activeVisitors.map((visitor, idx) => {
+                {currentActiveVisitors.map((visitor, idx) => {
                   const duration = Math.floor((new Date() - new Date(visitor.arrival_time)) / 1000 / 60);
                   return (
                     <tr key={`active-visitor-${visitor.record_id}-${idx}-${visitor.arrival_time}`} className="hover:bg-gray-50">
@@ -236,9 +253,18 @@ const VisitorsPage = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          <Pagination
+            currentPage={currentPageActive}
+            totalPages={totalActivePages}
+            totalItems={activeVisitors.length}
+            startIndex={startIndexActive}
+            endIndex={endIndexActive}
+            onPageChange={setCurrentPageActive}
+          />
         </div>
       )}
-      <br></br>
       {/* Visitor History */}
       <div className="card">
         <h2 className="text-xl font-semibold text-primary mb-4">Recent Visitor History</h2>
@@ -254,7 +280,7 @@ const VisitorsPage = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {visitors.slice(0, 20).map((visitor, idx) => (
+              {currentVisitors.map((visitor, idx) => (
                 <tr key={`visitor-history-${visitor.record_id}-${idx}-${visitor.arrival_time}`} className="hover:bg-gray-50">
                   <td className="table-cell">{visitor.record_id}</td>
                   <td className="table-cell font-mono">{visitor.license_plate || 'N/A'}</td>
@@ -276,6 +302,16 @@ const VisitorsPage = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+          <Pagination
+            currentPage={currentPageVisitors}
+            totalPages={totalPagesVisitors}
+            totalItems={visitors.length}
+            startIndex={startIndexVisitors}
+            endIndex={endIndexVisitors}
+            onPageChange={setCurrentPageVisitors}
+          />
       </div>
     </div>
   );
