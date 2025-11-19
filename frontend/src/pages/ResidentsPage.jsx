@@ -266,7 +266,7 @@ const ResidentsPage = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {filteredResidents.slice(0, 20).map((resident) => (
+                  {currentResidents.map((resident) => (
                     <tr key={`resident-${resident.resident_id}`} className="hover:bg-gray-50">
                       <td className="table-cell">{resident.resident_id}</td>
                       <td className="table-cell font-medium">{resident.name}</td>
@@ -394,7 +394,7 @@ const ResidentsPage = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {filteredVehicles.slice(0, 20).map((vehicle) => (
+                  {currentVehicles.map((vehicle) => (
                     <tr key={`vehicle-${vehicle.vehicle_id}`} className="hover:bg-gray-50">
                       <td className="table-cell">{vehicle.vehicle_id}</td>
                       <td className="table-cell font-mono font-bold">{vehicle.license_plate}</td>
