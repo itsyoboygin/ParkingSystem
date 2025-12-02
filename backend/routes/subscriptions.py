@@ -57,7 +57,7 @@ def get_subscription(
     try:
         query = """
             SELECT ps.subscription_id, ps.vehicle_id, ps.resident_id,
-                   ps.is_monthly, ps.is_quaterly, ps.is_yearly,
+                   ps.is_monthly, ps.is_quarterly, ps.is_yearly,
                    ps.start_date, ps.expiration_date, ps.cost,
                    v.license_plate, r.name as resident_name
             FROM ParkingSubscription ps
@@ -103,7 +103,7 @@ def create_subscription(
         query = f"""
             INSERT INTO ParkingSubscription (
                 subscription_id, vehicle_id, resident_id,
-                is_monthly, is_quaterly, is_yearly,
+                is_monthly, is_quarterly, is_yearly,
                 start_date, expiration_date, cost
             )
             VALUES (
@@ -140,7 +140,7 @@ def renew_subscription(
             SELECT expiration_date,
                    CASE
                        WHEN is_monthly = 1 THEN 'monthly'
-                       WHEN is_quaterly = 1 THEN 'quarterly'
+                       WHEN is_quarterly = 1 THEN 'quarterly'
                        WHEN is_yearly = 1 THEN 'yearly'
                    END as subscription_type,
                    cost, vehicle_id, resident_id
@@ -177,7 +177,7 @@ def renew_subscription(
         query = f"""
             INSERT INTO ParkingSubscription (
                 subscription_id, vehicle_id, resident_id,
-                is_monthly, is_quaterly, is_yearly,
+                is_monthly, is_quarterly, is_yearly,
                 start_date, expiration_date, cost
             )
             VALUES (

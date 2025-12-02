@@ -7,11 +7,11 @@ load_dotenv()
 
 class Database:
     def __init__(self):
-        self.user = os.getenv("DB_USER", "system")
-        self.password = os.getenv("DB_PASSWORD", "123")
+        self.user = os.getenv("DB_USER", "hr")
+        self.password = os.getenv("DB_PASSWORD", "phucdo1812")
         self.host = os.getenv("DB_HOST", "localhost")
-        self.port = os.getenv("DB_PORT", "1522")
-        self.service_name = os.getenv("DB_SERVICE_NAME", "xe")
+        self.port = os.getenv("DB_PORT", "1521")
+        self.service_name = os.getenv("DB_SERVICE_NAME", "orcl")
         # Construct DSN from components
         self.dsn = f"{self.host}:{self.port}/{self.service_name}"
         self.pool: Optional[oracledb.ConnectionPool] = None

@@ -10,11 +10,11 @@ load_dotenv()
 print("🔍 Quick Database Connection Test")
 print("=" * 50)
 
-user = os.getenv('DB_USER', 'system')
-password = os.getenv('DB_PASSWORD', 'oracle')
+user = os.getenv('DB_USER', 'hr')
+password = os.getenv('DB_PASSWORD', 'phucdo1812')
 host = os.getenv('DB_HOST', 'localhost')
-port = os.getenv('DB_PORT', '1522')
-service = os.getenv('DB_SERVICE_NAME', 'xe')
+port = os.getenv('DB_PORT', '1521')
+service = os.getenv('DB_SERVICE_NAME', 'orcl')
 dsn = f'{host}:{port}/{service}'
 
 print(f"\n📋 Thông tin kết nối:")

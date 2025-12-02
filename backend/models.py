@@ -75,7 +75,7 @@ def get_subscriptions(connection, limit: int = 100, offset: int = 0) -> List[Dic
     """Get parking subscriptions"""
     query = """
         SELECT ps.subscription_id, ps.vehicle_id, ps.resident_id,
-               ps.is_monthly, ps.is_quaterly, ps.is_yearly,
+               ps.is_monthly, ps.is_quarterly, ps.is_yearly,
                ps.start_date, ps.expiration_date, ps.cost,
                v.license_plate, r.name as resident_name
         FROM ParkingSubscription ps
@@ -93,7 +93,7 @@ def get_expiring_subscriptions(connection, days: int = 7) -> List[Dict]:
                ps.expiration_date, ps.cost,
                CASE
                    WHEN ps.is_monthly = 1 THEN 'Monthly'
-                   WHEN ps.is_quaterly = 1 THEN 'Quarterly'
+                   WHEN ps.is_quarterly = 1 THEN 'Quarterly'
                    WHEN ps.is_yearly = 1 THEN 'Yearly'
                END as subscription_type,
                v.license_plate, r.name as resident_name, r.email, r.phone_number
